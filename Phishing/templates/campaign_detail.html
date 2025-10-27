@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>{{ campaign.name }}</h2>
+    <p>Status: <strong class="status-badge status-{{ campaign.status }}">{{ campaign.status }}</strong></p>
+    {% if campaign.description %}
+    <p style="margin-top: 1rem; color: #666;">{{ campaign.description }}</p>
+    {% endif %}
+    {% if campaign.status == 'draft' %}
+    <form method="POST" action="/campaign/{{ campaign.id }}/launch" style="margin: 1rem 0;">
+        <button type="submit" class="btn btn-success" onclick="return confirm('Launch this campaign?')">Launch Campaign</button>
+    </form>
+    {% endif %}
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <h3>{{ stats.sent }}</h3><p>Sent</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <h3>{{ stats.open_rate }}%</h3><p>Open Rate</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+        <h3>{{ stats.click_rate }}%</h3><p>Click Rate</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+        <h3>{{ stats.submit_rate }}%</h3><p>Submit Rate</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Add Targets</h3>
+    <form method="POST" action="/campaign/{{ campaign.id }}/add_targets">
+        <label>Email Addresses (one per line)</label>
+        <textarea name="emails" required placeholder="user1@example.com&#10;user2@example.com"></textarea>
+        <button type="submit" class="btn">Add Targets</button>
+    </form>
+</div>
+
+<div class="card">
+    <h3>Target List ({{ campaign.targets|length }})</h3>
+    {% if campaign.targets %}
+    <table>
+        <thead><tr><th>Email</th><th>Sent</th><th>Opened</th><th>Clicked</th><th>Submitted</th></tr></thead>
+        <tbody>
+            {% for t in campaign.targets %}
+            <tr>
+                <td>{{ t.email }}</td>
+                <td>{% if t.sent_at %}✓{% else %}-{% endif %}</td>
+                <td>{% if t.opened_at %}✓{% else %}-{% endif %}</td>
+                <td>{% if t.clicked_at %}✓{% else %}-{% endif %}</td>
+                <td>{% if t.submitted_at %}✓{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #7f8c8d;">No targets added.</p>
+    {% endif %}
+</div>
+{% endblock %}

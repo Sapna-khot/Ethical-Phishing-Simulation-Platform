@@ -1,0 +1,52 @@
+"""{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Welcome to Phishing Simulation Platform</h2>
+    <p style="margin: 1rem 0; color: #7f8c8d;">Test and improve security awareness through simulated campaigns.</p>
+    <div style="background: #fff3cd; padding: 1rem; border-left: 4px solid #ffc107; margin: 1rem 0;">
+        <strong>⚠️ Important:</strong> For authorized security training only.
+    </div>
+    <div style="margin-top: 2rem;">
+        <a href="/campaign/create" class="btn btn-success">Create New Campaign</a>
+        <a href="/template/create" class="btn">Create New Template</a>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <h3>{{ stats.total_campaigns }}</h3><p>Total Campaigns</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+        <h3>{{ stats.total_templates }}</h3><p>Templates</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+        <h3>{{ stats.total_targets }}</h3><p>Total Targets</p>
+    </div>
+    <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+        <h3>{{ stats.active_campaigns }}</h3><p>Active</p>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Recent Campaigns</h3>
+    {% if campaigns %}
+    <table>
+        <thead><tr><th>Name</th><th>Status</th><th>Created</th><th>Targets</th><th>Actions</th></tr></thead>
+        <tbody>
+            {% for c in campaigns %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td><span class="status-badge status-{{ c.status }}">{{ c.status }}</span></td>
+                <td>{{ c.created_at.strftime('%Y-%m-%d') }}</td>
+                <td>{{ c.targets|length }}</td>
+                <td><a href="/campaign/{{ c.id }}" class="btn" style="padding: 0.5rem 1rem;">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #7f8c8d; margin-top: 1rem;">No campaigns yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
+""",

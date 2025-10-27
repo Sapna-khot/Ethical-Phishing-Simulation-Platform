@@ -1,0 +1,13 @@
+ """{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Preview: {{ template.name }}</h2>
+    <p><strong>Category:</strong> {{ template.category }} | <strong>Difficulty:</strong> {{ template.difficulty }}</p>
+    <h3 style="margin-top: 2rem;">Email Subject:</h3>
+    <div style="background: #f8f9fa; padding: 1rem; border-radius: 4px;">{{ template.subject }}</div>
+    <h3 style="margin-top: 2rem;">Email Body:</h3>
+    <div style="border: 2px solid #ddd; padding: 2rem; background: white; margin-top: 1rem;">{{ preview_body|safe }}</div>
+    <a href="/templates" class="btn" style="margin-top: 2rem;">Back</a>
+</div>
+{% endblock %}
+""",

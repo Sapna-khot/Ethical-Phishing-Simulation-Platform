@@ -1,0 +1,14 @@
+"""{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 2rem auto; text-align: center;">
+    <div style="font-size: 4rem; margin-bottom: 1rem;">🎣</div>
+    <h1 style="color: #e74c3c; margin: 1rem 0;">{{ content.title }}</h1>
+    <div style="line-height: 1.6; text-align: left; margin: 2rem 0;">{{ content.content|safe }}</div>
+    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; text-align: left; margin-top: 2rem;">
+        <h3 style="margin-bottom: 1rem;">How to Protect Yourself:</h3>
+        {{ content.tips|safe }}
+    </div>
+    <p style="color: #7f8c8d; margin-top: 2rem;">Questions? Contact your security team.</p>
+</div>
+{% endblock %}
+""",

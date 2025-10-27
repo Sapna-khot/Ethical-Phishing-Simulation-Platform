@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}Email Templates - Phishing Simulator{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 style="margin: 0;">Email Templates</h2>
+        <a href="/template/create" class="btn btn-success">+ Create New Template</a>
+    </div>
+
+    <div style="background: #e3f2fd; padding: 1rem; border-left: 4px solid #2196f3; border-radius: 4px; margin-bottom: 2rem;">
+        <strong>💡 Tip:</strong> Templates can be customized with variables like <code>{{tracking_url}}</code> and <code>{{target_email}}</code>
+    </div>
+
+    {% if templates %}
+    <!-- Filter/Sort Options -->
+    <div style="margin-bottom: 2rem;">
+        <label style="margin-right: 1rem;">
+            <strong>Filter by Category:</strong>
+            <select id="categoryFilter" onchange="filterTemplates()" style="padding: 0.5rem; margin-left: 0.5rem;">
+                <option value="all">All Categories</option>
+                <option value="credential_harvesting">Credential Harvesting</option>
+                <option value="urgent_action">Urgent Action</option>
+                <option value="ceo_fraud">CEO Fraud / BEC</option>
+                <option value="social_media">Social Media</option>
+            </select>
+        </label>
+
+        <label>
+            <strong>Difficulty:</strong>
+            <select id="difficultyFilter" onchange="filterTemplates()" style="padding: 0.5rem; margin-left: 0.5rem;">
+                <option value="all">All Levels</option>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </label>
+    </div>
+
+    <!-- Templates Grid -->
+    <div id="templatesGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+        {% for template in templates %}
+        <div class="template-card"
+             data-category="{{ template.category }}"
+             data-difficulty="{{ template.difficulty }}"
+             style="border: 1px solid #e0e0e0; border-radius: 8px; padding: 1.5rem; background: #fafafa; transition: all 0.3s;">
+
+            <!-- Template Header -->
+            <div style="margin-bottom: 1rem;">
+                <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50; font-size: 1.2rem;">
+                    {{ template.name }}
+                </h3>
+
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+                    <!-- Category Badge -->
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;
+                        {% if template.category == 'credential_harvesting' %}background: #e3f2fd; color: #1565c0;
+                        {% elif template.category == 'urgent_action' %}background: #fff3e0; color: #e65100;
+                        {% elif template.category == 'ceo_fraud' %}background: #fce4ec; color: #c2185b;
+                        {% elif template.category == 'social_media' %}background: #f3e5f5; color: #7b1fa2;
+                        {% else %}background: #f5f5f5; color: #616161;{% endif %}">
+                        {{ template.category.replace('_', ' ').title() }}
+                    </span>
+
+                    <!-- Difficulty Badge -->
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;
+                        {% if template.difficulty == 'easy' %}background: #c8e6c9; color: #2e7d32;
+                        {% elif template.difficulty == 'medium' %}background: #fff9c4; color: #f57f17;
+                        {% elif template.difficulty == 'hard' %}background: #ffcdd2; color: #c62828;
+                        {% else %}background: #e0e0e0; color: #424242;{% endif %}">
+                        {{ template.difficulty.title() }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Email Subject Preview -->
+            <div style="margin-bottom: 1rem;">
+                <strong style="color: #666; font-size: 0.85rem;">Subject:</strong>
+                <p style="margin: 0.25rem 0 0 0; color: #333; font-size: 0.9rem; line-height: 1.4;">
+                    {{ template.subject[:80] }}{% if template.subject|length > 80 %}...{% endif %}
+                </p>
+            </div>
+
+            <!-- Template Stats/Info -->
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; padding: 0.75rem; background: white; border-radius: 4px; font-size: 0.85rem; color: #666;">
+                <div>
+                    <strong>📧</strong>
+                    <span>{{ template.campaigns|length }} campaigns</span>
+                </div>
+                <div>
+                    <strong>📅</strong>
+                    <span>{{ template.created_at.strftime('%b %d, %Y') }}</span>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="/template/{{ template.id }}/preview"
+                   class="btn"
+                   style="padding: 0.6rem 1rem; font-size: 0.9rem; flex: 1; text-align: center;">
+                    👁️ Preview
+                </a>
+                <button onclick="useTemplate({{ template.id }})"
+                        class="btn btn-success"
+                        style="padding: 0.6rem 1rem; font-size: 0.9rem; flex: 1;">
+                    ✓ Use
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Template Statistics -->
+    <div style="margin-top: 3rem; padding: 2rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; color: white;">
+        <h3 style="margin: 0 0 1rem 0;">Template Library Statistics</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold;">{{ templates|length }}</div>
+                <div style="opacity: 0.9; font-size: 0.9rem;">Total Templates</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold;">
+                    {{ templates|selectattr('category', 'equalto', 'credential_harvesting')|list|length }}
+                </div>
+                <div style="opacity: 0.9; font-size: 0.9rem;">Credential Harvesting</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold;">
+                    {{ templates|selectattr('category', 'equalto', 'urgent_action')|list|length }}
+                </div>
+                <div style="opacity: 0.9; font-size: 0.9rem;">Urgent Action</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold;">
+                    {{ templates|selectattr('difficulty', 'equalto', 'hard')|list|length }}
+                </div>
+                <div style="opacity: 0.9; font-size: 0.9rem;">Hard Difficulty</div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Empty State -->
+    <div style="text-align: center; padding: 4rem 2rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">📧</div>
+        <h3 style="color: #666; margin-bottom: 1rem;">No Templates Yet</h3>
+        <p style="color: #999; margin-bottom: 2rem;">
+            Create your first phishing template to get started with your security awareness campaigns.
+        </p>
+        <a href="/template/create" class="btn btn-success" style="padding: 1rem 2rem; font-size: 1.1rem;">
+            + Create Your First Template
+        </a>
+
+        <div style="margin-top: 3rem; padding: 2rem; background: #f9f9f9; border-radius: 8px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+            <h4 style="margin-top: 0;">💡 Template Ideas:</h4>
+            <ul style="line-height: 2; color: #666;">
+                <li>Password expiration alerts</li>
+                <li>Package delivery notifications</li>
+                <li>IT security warnings</li>
+                <li>CEO/Executive requests</li>
+                <li>Account verification emails</li>
+                <li>Prize winner notifications</li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- JavaScript for Filtering -->
+<script>
+function filterTemplates() {
+    const categoryFilter = document.getElementById('categoryFilter').value;
+    const difficultyFilter = document.getElementById('difficultyFilter').value;
+    const cards = document.querySelectorAll('.template-card');
+
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        const category = card.getAttribute('data-category');
+        const difficulty = card.getAttribute('data-difficulty');
+
+        const categoryMatch = categoryFilter === 'all' || category === categoryFilter;
+        const difficultyMatch = difficultyFilter === 'all' || difficulty === difficultyFilter;
+
+        if (categoryMatch && difficultyMatch) {
+            card.style.display = 'block';
+            visibleCount++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // Show message if no templates match
+    let noResultsMsg = document.getElementById('noResultsMessage');
+    if (visibleCount === 0) {
+        if (!noResultsMsg) {
+            noResultsMsg = document.createElement('div');
+            noResultsMsg.id = 'noResultsMessage';
+            noResultsMsg.style.cssText = 'text-align: center; padding: 3rem; color: #999; grid-column: 1 / -1;';
+            noResultsMsg.innerHTML = '<div style="font-size: 3rem;">🔍</div><p>No templates match your filters</p>';
+            document.getElementById('templatesGrid').appendChild(noResultsMsg);
+        }
+    } else if (noResultsMsg) {
+        noResultsMsg.remove();
+    }
+}
+
+function useTemplate(templateId) {
+    // Redirect to create campaign with this template pre-selected
+    window.location.href = `/campaign/create?template_id=${templateId}`;
+}
+
+// Add hover effects
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.template-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 8px 16px rgba(0,0,0,0.15)';
+            this.style.borderColor = '#3498db';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+            this.style.borderColor = '#e0e0e0';
+        });
+    });
+});
+</script>
+
+<!-- Additional Styles -->
+<style>
+.template-card {
+    position: relative;
+}
+
+.template-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 8px 8px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.template-card:hover::before {
+    opacity: 1;
+}
+
+code {
+    background: #f5f5f5;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #d63384;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #templatesGrid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .template-card {
+        margin-bottom: 1rem;
+    }
+}
+</style>
+
+{% endblock %}

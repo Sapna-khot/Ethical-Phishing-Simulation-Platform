@@ -1,0 +1,26 @@
+"""{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>All Campaigns</h2>
+    <a href="/campaign/create" class="btn btn-success" style="margin: 1rem 0;">Create Campaign</a>
+    {% if campaigns %}
+    <table>
+        <thead><tr><th>Name</th><th>Status</th><th>Targets</th><th>Created</th><th>Actions</th></tr></thead>
+        <tbody>
+            {% for c in campaigns %}
+            <tr>
+                <td>{{ c.name }}</td>
+                <td><span class="status-badge status-{{ c.status }}">{{ c.status }}</span></td>
+                <td>{{ c.targets|length }}</td>
+                <td>{{ c.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td><a href="/campaign/{{ c.id }}" class="btn" style="padding: 0.5rem;">View</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #7f8c8d;">No campaigns.</p>
+    {% endif %}
+</div>
+{% endblock %}
+""",

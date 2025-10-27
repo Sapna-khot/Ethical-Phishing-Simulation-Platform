@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Create Campaign - Phishing Simulator{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Create New Campaign</h2>
+    <p style="color: #666; margin-bottom: 2rem;">
+        Set up a new phishing simulation campaign to test your organization's security awareness.
+    </p>
+
+    <form method="POST" action="/campaign/create">
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2c3e50;">
+                Campaign Name *
+            </label>
+            <input type="text"
+                   name="name"
+                   required
+                   placeholder="e.g., Q1 2024 Security Training"
+                   style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+            <small style="color: #666; display: block; margin-top: 0.25rem;">
+                Choose a descriptive name for tracking purposes
+            </small>
+        </div>
+
+        <div style="margin-bottom: 1.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2c3e50;">
+                Description (Optional)
+            </label>
+            <textarea name="description"
+                      placeholder="Optional description of campaign goals and target audience"
+                      style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; min-height: 100px; font-size: 1rem; font-family: inherit;"></textarea>
+        </div>
+
+        <div style="margin-bottom: 2rem;">
+            <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2c3e50;">
+                Select Email Template *
+            </label>
+            <select name="template_id"
+                    required
+                    style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem;">
+                <option value="">-- Choose a template --</option>
+                {% for template in templates %}
+                <option value="{{ template.id }}">
+                    {{ template.name }} ({{ template.category|replace('_', ' ')|title }} - {{ template.difficulty|title }})
+                </option>
+                {% endfor %}
+            </select>
+            <small style="color: #666; display: block; margin-top: 0.25rem;">
+                Select the phishing template to use for this campaign
+            </small>
+        </div>
+
+        {% if not templates %}
+        <div style="background: #fff3cd; border: 1px solid #ffc107; padding: 1rem; border-radius: 4px; margin-bottom: 2rem;">
+            <strong>⚠️ No Templates Available</strong>
+            <p style="margin: 0.5rem 0 0 0;">
+                You need to create at least one email template before launching a campaign.
+                <a href="/template/create" style="color: #0066cc; text-decoration: underline;">Create a template now</a>
+            </p>
+        </div>
+        {% endif %}
+
+        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #e0e0e0;">
+            <button type="submit"
+                    class="btn btn-success"
+                    style="padding: 0.875rem 2rem; font-size: 1rem; margin-right: 1rem;"
+                    {% if not templates %}disabled{% endif %}>
+                ✓ Create Campaign
+            </button>
+            <a href="/campaigns"
+               class="btn"
+               style="padding: 0.875rem 2rem; font-size: 1rem;">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<!-- Information Panel -->
+<div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+    <h3 style="margin-top: 0; color: white;">💡 Campaign Setup Tips</h3>
+    <ul style="line-height: 2; margin-bottom: 0;">
+        <li><strong>Choose the right template:</strong> Match difficulty to your audience's experience level</li>
+        <li><strong>Descriptive names:</strong> Use names that help you track campaigns over time (e.g., "Q1-2024-Finance-Dept")</li>
+        <li><strong>Test first:</strong> Always send a test email to yourself before launching</li>
+        <li><strong>Target carefully:</strong> Start with smaller groups before organization-wide campaigns</li>
+        <li><strong>Monitor actively:</strong> Check results regularly during the campaign</li>
+    </ul>
+</div>
+
+<style>
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button:disabled:hover {
+    background: #27ae60 !important;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+"""{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <h2>Create New Template</h2>
+    <div style="background: #d1ecf1; padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+        <strong>Variables:</strong> Use <code>{{tracking_url}}</code> for phishing link, <code>{{target_email}}</code> for email, <code>{{token}}</code> in form action
+    </div>
+    <form method="POST">
+        <label>Template Name *</label>
+        <input type="text" name="name" required placeholder="Password Reset Request">
+        <label>Category *</label>
+        <select name="category" required>
+            <option value="credential_harvesting">Credential Harvesting</option>
+            <option value="urgent_action">Urgent Action Required</option>
+            <option value="ceo_fraud">CEO Fraud / BEC</option>
+            <option value="social_media">Social Media Scam</option>
+        </select>
+        <label>Difficulty</label>
+        <select name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+        <label>Email Subject *</label>
+        <input type="text" name="subject" required placeholder="URGENT: Password Expires Today">
+        <label>Email Body (HTML) *</label>
+        <textarea name="body" required placeholder="Use {{tracking_url}} for the phishing link"></textarea>
+        <label>Landing Page (HTML) *</label>
+        <textarea name="landing_page" required placeholder="Use {{token}} in form action: /submit/{{token}}"></textarea>
+        <div style="margin-top: 2rem;">
+            <button type="submit" class="btn btn-success">Create Template</button>
+            <a href="/templates" class="btn">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+""",
