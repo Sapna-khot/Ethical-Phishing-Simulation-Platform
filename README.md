@@ -25,7 +25,6 @@ cp .env.example .env
 # Initialize
 python scripts/init_db.py
 python scripts/add_sample_templates.py
-
 # Run
 python app.py
 ```
