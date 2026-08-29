@@ -14,6 +14,7 @@ The platform provides a central dashboard for conducting controlled phishing-awa
 
 Main workflow
 
+~~~text
 Admin
   │
   ├── Create Email Template
@@ -40,6 +41,7 @@ Admin
           ├── Open Rate
           ├── Click Rate
           └── Submit Rate
+   ~~~
 
 ✨ Features
 
@@ -114,7 +116,7 @@ Production Server
 Gunicorn
 
 📁 Project Structure
-
+~~~
 Ethical-Phishing-Simulation-Platform-main/
 │
 └── Phishing/
