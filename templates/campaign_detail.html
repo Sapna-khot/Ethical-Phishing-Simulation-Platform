@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}{{ campaign.name }} | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="page-hero compact-page-hero">
+        <div>
+            <div class="security-label"><span class="pulse-dot"></span> CAMPAIGN DETAILS</div>
+            <h1>{{ campaign.name }}</h1>
+            <p>{{ campaign.description or 'Controlled security-awareness simulation campaign.' }}</p>
+        </div>
+        <div class="detail-header-actions">
+            <span class="cyber-status status-{{ campaign.status }}"><span class="status-dot"></span>{{ campaign.status|upper }}</span>
+            <a href="{{ url_for('campaigns') }}" class="cyber-btn cyber-btn-ghost">← All Campaigns</a>
+        </div>
+    </section>
+
+    <section class="cyber-stats detail-stats">
+        <div class="cyber-stat"><div class="stat-icon blue-icon">◎</div><div><div class="stat-number">{{ stats.sent }}</div><div class="stat-label">EMAILS SENT</div></div></div>
+        <div class="cyber-stat"><div class="stat-icon purple-icon">◉</div><div><div class="stat-number">{{ stats.open_rate }}%</div><div class="stat-label">OPEN RATE</div></div></div>
+        <div class="cyber-stat"><div class="stat-icon blue-icon">↗</div><div><div class="stat-number">{{ stats.click_rate }}%</div><div class="stat-label">CLICK RATE</div></div></div>
+        <div class="cyber-stat"><div class="stat-icon green-icon">✓</div><div><div class="stat-number">{{ stats.submit_rate }}%</div><div class="stat-label">SUBMIT RATE</div></div></div>
+    </section>
+
+    {% if campaign.status == 'draft' %}
+    <section class="cyber-panel launch-panel">
+        <div><div class="panel-kicker"><span class="panel-line"></span> CAMPAIGN READY</div><h3>Launch when your target list is ready</h3><p>Add authorized training recipients first, then launch the controlled simulation.</p></div>
+        <form method="POST" action="{{ url_for('launch_campaign', campaign_id=campaign.id) }}" onsubmit="return confirm('Launch this campaign?');">
+            <button type="submit" class="cyber-btn cyber-btn-primary">▶ Launch Campaign</button>
+        </form>
+    </section>
+    {% endif %}
+
+    <div class="detail-grid">
+        <section class="cyber-panel">
+            <div class="panel-kicker"><span class="panel-line"></span> TARGET MANAGEMENT</div>
+            <h2>Add Targets</h2>
+            <p class="panel-description">Add authorized training email addresses, one per line.</p>
+            <form method="POST" action="{{ url_for('add_targets', campaign_id=campaign.id) }}" class="cyber-form">
+                <div class="form-field"><label for="emails">Email Addresses</label><textarea id="emails" name="emails" required placeholder="user1@example.com&#10;user2@example.com"></textarea></div>
+                <button type="submit" class="cyber-btn cyber-btn-secondary">＋ Add Targets</button>
+            </form>
+        </section>
+
+        <section class="cyber-panel">
+            <div class="panel-kicker"><span class="panel-line"></span> CAMPAIGN OVERVIEW</div>
+            <h2>Simulation Metrics</h2>
+            <div class="mini-metric"><span>Total targets</span><strong>{{ stats.total }}</strong></div>
+            <div class="mini-metric"><span>Sent</span><strong>{{ stats.sent }}</strong></div>
+            <div class="mini-metric"><span>Opened</span><strong>{{ stats.opened }}</strong></div>
+            <div class="mini-metric"><span>Clicked</span><strong>{{ stats.clicked }}</strong></div>
+            <div class="mini-metric"><span>Submitted</span><strong>{{ stats.submitted }}</strong></div>
+        </section>
+    </div>
+
+    <section class="cyber-panel">
+        <div class="panel-header">
+            <div><div class="panel-kicker"><span class="panel-line"></span> RECIPIENT ACTIVITY</div><h2>Target List</h2><p>Track interaction with this controlled campaign.</p></div>
+            <div class="campaign-total"><span class="total-number">{{ campaign.targets|length }}</span><span class="total-label">Targets</span></div>
+        </div>
+        {% if campaign.targets %}
+        <div class="cyber-table-wrapper">
+            <table class="cyber-table target-table">
+                <thead><tr><th>EMAIL</th><th>SENT</th><th>OPENED</th><th>CLICKED</th><th>SUBMITTED</th></tr></thead>
+                <tbody>
+                {% for t in campaign.targets %}
+                    <tr>
+                        <td><strong class="email-cell">{{ t.email }}</strong></td>
+                        <td><span class="event-status {% if t.sent_at %}done{% endif %}">{% if t.sent_at %}✓ Complete{% else %}— Pending{% endif %}</span></td>
+                        <td><span class="event-status {% if t.opened_at %}done{% endif %}">{% if t.opened_at %}✓ Opened{% else %}— Pending{% endif %}</span></td>
+                        <td><span class="event-status {% if t.clicked_at %}done{% endif %}">{% if t.clicked_at %}✓ Clicked{% else %}— Pending{% endif %}</span></td>
+                        <td><span class="event-status {% if t.submitted_at %}danger-done{% endif %}">{% if t.submitted_at %}✓ Submitted{% else %}— Pending{% endif %}</span></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state compact-empty"><div class="empty-icon">◎</div><h3>No Targets Added</h3><p>Add authorized recipients above to begin tracking the campaign.</p></div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

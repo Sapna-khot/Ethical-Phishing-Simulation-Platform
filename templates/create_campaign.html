@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Create Campaign | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="page-hero compact-page-hero">
+        <div>
+            <div class="security-label"><span class="pulse-dot"></span> CAMPAIGN BUILDER</div>
+            <h1>Create <span>New Campaign</span></h1>
+            <p>Configure a controlled security-awareness simulation.</p>
+        </div>
+        <a href="{{ url_for('campaigns') }}" class="cyber-btn cyber-btn-ghost">← Back to Campaigns</a>
+    </section>
+
+    <div class="form-layout">
+        <section class="cyber-panel form-panel">
+            <div class="panel-kicker"><span class="panel-line"></span> CAMPAIGN CONFIGURATION</div>
+            <h2>Campaign Details</h2>
+            <p class="panel-description">Enter the campaign information and select the email template to use.</p>
+
+            <form method="POST" action="{{ url_for('create_campaign') }}" class="cyber-form">
+                <div class="form-field">
+                    <label for="campaign-name">Campaign Name <span>*</span></label>
+                    <input id="campaign-name" type="text" name="name" required placeholder="e.g., Q1 2026 Security Awareness">
+                    <small>Use a descriptive name so results are easy to identify later.</small>
+                </div>
+
+                <div class="form-field">
+                    <label for="description">Description <span class="optional">(Optional)</span></label>
+                    <textarea id="description" name="description" placeholder="Describe the campaign objective, audience or training goal."></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label for="template-id">Select Email Template <span>*</span></label>
+                    <select id="template-id" name="template_id" required>
+                        <option value="">-- Choose a template --</option>
+                        {% for template in templates %}
+                        <option value="{{ template.id }}" {% if selected_template_id == template.id %}selected{% endif %}>
+                            {{ template.name }} · {{ template.category|replace('_', ' ')|title }} · {{ template.difficulty|title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small>Select the controlled simulation template for this campaign.</small>
+                </div>
+
+                {% if not templates %}
+                <div class="form-alert warning">
+                    <strong>⚠ No Templates Available</strong>
+                    <p>Create at least one email template before creating a campaign.</p>
+                    <a href="{{ url_for('create_template') }}">Create a template →</a>
+                </div>
+                {% endif %}
+
+                <div class="form-actions">
+                    <button type="submit" class="cyber-btn cyber-btn-primary" {% if not templates %}disabled{% endif %}>✓ Create Campaign</button>
+                    <a href="{{ url_for('campaigns') }}" class="cyber-btn cyber-btn-ghost">Cancel</a>
+                </div>
+            </form>
+        </section>
+
+        <aside class="cyber-panel tips-panel">
+            <div class="panel-kicker"><span class="panel-line"></span> QUICK GUIDE</div>
+            <h3>Campaign Setup Tips</h3>
+            <div class="tip-list">
+                <div class="tip-item"><span>01</span><div><strong>Choose the right template</strong><p>Match difficulty to your audience's experience level.</p></div></div>
+                <div class="tip-item"><span>02</span><div><strong>Use clear names</strong><p>Include the quarter, department or training objective.</p></div></div>
+                <div class="tip-item"><span>03</span><div><strong>Start small</strong><p>Use a controlled test group before expanding the simulation.</p></div></div>
+                <div class="tip-item"><span>04</span><div><strong>Monitor results</strong><p>Review opens, clicks and submissions to identify training needs.</p></div></div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

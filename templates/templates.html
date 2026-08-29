@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Email Templates | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="page-hero">
+        <div>
+            <div class="security-label"><span class="pulse-dot"></span> TEMPLATE LIBRARY</div>
+            <h1>Email <span>Templates</span></h1>
+            <p>Manage controlled phishing simulation templates used for security-awareness exercises.</p>
+        </div>
+        <a href="{{ url_for('create_template') }}" class="cyber-btn cyber-btn-primary">＋ Create New Template</a>
+    </section>
+
+    <section class="cyber-panel">
+        <div class="template-tip">
+            <span class="tip-icon">💡</span>
+            <div><strong>Simulation variables</strong><p>Use <code>{{tracking_url}}</code>, <code>{{target_email}}</code> and <code>{{target_name}}</code> where needed.</p></div>
+        </div>
+
+        {% if templates %}
+        <div class="template-filters">
+            <div class="filter-field"><label for="categoryFilter">CATEGORY</label><select id="categoryFilter" onchange="filterTemplates()">
+                <option value="all">All Categories</option>
+                <option value="credential_harvesting">Credential Harvesting</option>
+                <option value="urgent_action">Urgent Action</option>
+                <option value="ceo_fraud">CEO Fraud / BEC</option>
+                <option value="social_media">Social Media</option>
+            </select></div>
+            <div class="filter-field"><label for="difficultyFilter">DIFFICULTY</label><select id="difficultyFilter" onchange="filterTemplates()">
+                <option value="all">All Levels</option>
+                <option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option>
+            </select></div>
+        </div>
+
+        <div id="templatesGrid" class="templates-grid">
+        {% for template in templates %}
+            <article class="template-card" data-category="{{ template.category }}" data-difficulty="{{ template.difficulty }}">
+                <div class="template-card-top">
+                    <div class="template-icon">✉</div>
+                    <div class="template-title-wrap">
+                        <h3>{{ template.name }}</h3>
+                        <span class="template-id">TEMPLATE #{{ template.id }}</span>
+                    </div>
+                </div>
+
+                <div class="badge-row">
+                    <span class="cyber-badge category-{{ template.category }}">{{ template.category.replace('_', ' ').title() }}</span>
+                    <span class="cyber-badge difficulty-{{ template.difficulty }}">{{ template.difficulty.title() }}</span>
+                </div>
+
+                <div class="subject-preview">
+                    <span>SUBJECT</span>
+                    <strong>{{ template.subject[:100] }}{% if template.subject|length > 100 %}...{% endif %}</strong>
+                </div>
+
+                <div class="template-meta">
+                    <span>◉ {{ template.campaigns|length }} campaign{{ 's' if template.campaigns|length != 1 else '' }}</span>
+                    <span>◷ {{ template.created_at.strftime('%b %d, %Y') }}</span>
+                </div>
+
+                <div class="template-actions">
+                    <a href="{{ url_for('preview_template', template_id=template.id) }}" class="action-btn action-view">◉ Preview</a>
+                    <button onclick="useTemplate({{ template.id }})" class="action-btn action-use">✓ Use</button>
+                    <form action="{{ url_for('delete_template', template_id=template.id) }}" method="POST" class="delete-form"
+                          onsubmit="return confirm('Delete this template? Templates linked to campaigns cannot be deleted.');">
+                        <button type="submit" class="action-btn action-delete" title="Delete template">✕ Delete</button>
+                    </form>
+                </div>
+            </article>
+        {% endfor %}
+        </div>
+
+        <div id="noResultsMessage" class="empty-state filter-empty" hidden>
+            <div class="empty-icon">⌕</div><h3>No Matching Templates</h3><p>Try changing the category or difficulty filters.</p>
+        </div>
+
+        <div class="library-stats">
+            <div><strong>{{ templates|length }}</strong><span>Total Templates</span></div>
+            <div><strong>{{ templates|selectattr('category', 'equalto', 'credential_harvesting')|list|length }}</strong><span>Credential Harvesting</span></div>
+            <div><strong>{{ templates|selectattr('category', 'equalto', 'urgent_action')|list|length }}</strong><span>Urgent Action</span></div>
+            <div><strong>{{ templates|selectattr('difficulty', 'equalto', 'hard')|list|length }}</strong><span>Hard Difficulty</span></div>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">✉</div>
+            <h3>No Templates Yet</h3>
+            <p>Create your first controlled email simulation template.</p>
+            <a href="{{ url_for('create_template') }}" class="cyber-btn cyber-btn-primary">＋ Create Your First Template</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+function filterTemplates() {
+    const category = document.getElementById('categoryFilter').value;
+    const difficulty = document.getElementById('difficultyFilter').value;
+    const cards = document.querySelectorAll('.template-card');
+    let visible = 0;
+    cards.forEach(card => {
+        const show = (category === 'all' || card.dataset.category === category) &&
+                     (difficulty === 'all' || card.dataset.difficulty === difficulty);
+        card.hidden = !show;
+        if (show) visible++;
+    });
+    const empty = document.getElementById('noResultsMessage');
+    if (empty) empty.hidden = visible !== 0;
+}
+function useTemplate(templateId) {
+    window.location.href = `/campaign/create?template_id=${templateId}`;
+}
+</script>
+{% endblock %}

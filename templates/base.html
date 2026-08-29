@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Phishing Simulator{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=20260828">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+<header class="cyber-navbar">
+    <div class="navbar-inner">
+        <a href="/" class="cyber-logo">
+            <div class="logo-symbol">⚡</div>
+            <div class="logo-text">
+                <strong>PHISHING</strong>
+                <span>SIMULATION PLATFORM</span>
+            </div>
+        </a>
+
+        <nav class="cyber-nav">
+            <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">◉ Dashboard</a>
+            <a href="/campaigns" class="nav-link {% if request.path.startswith('/campaign') %}active{% endif %}">◈ Campaigns</a>
+            <a href="/templates" class="nav-link {% if request.path.startswith('/template') or request.path == '/templates' %}active{% endif %}">▣ Templates</a>
+            <a href="/analytics" class="nav-link {% if request.path.startswith('/analytics') %}active{% endif %}">◉ Analytics</a>
+        </nav>
+
+        <div class="system-status">
+            <span class="online-dot"></span>
+            SYSTEM ONLINE
+        </div>
+    </div>
+</header>
+
+<main class="main-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="cyber-flash flash-{{ category }}">
+                        <span class="flash-icon">
+                            {% if category == 'success' %}✓
+                            {% elif category == 'error' %}✕
+                            {% elif category == 'warning' %}⚠
+                            {% else %}ℹ{% endif %}
+                        </span>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="cyber-footer">
+    <div class="footer-line"></div>
+    <div class="footer-content">
+        <div>
+            <span class="footer-logo">⚡ PHISHING SIMULATION PLATFORM</span>
+            <span class="footer-text">Security Awareness &amp; Simulation</span>
+        </div>
+        <div class="footer-security">
+            <span class="online-dot"></span>
+            AUTHORIZED SECURITY TRAINING
+        </div>
+    </div>
+</footer>
+</body>
+</html>

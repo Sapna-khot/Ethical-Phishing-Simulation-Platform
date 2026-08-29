@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Security Education | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="cyber-panel education-panel">
+        <div class="education-icon">🎣</div>
+        <div class="security-label"><span class="pulse-dot"></span> SECURITY EDUCATION</div>
+        <h1>{{ content.title }}</h1>
+        <div class="education-content">{{ content.content|safe }}</div>
+        <div class="education-tips"><h3>How to Protect Yourself</h3>{{ content.tips|safe }}</div>
+        <p class="education-footer">Questions? Contact your security team.</p>
+    </section>
+</div>
+{% endblock %}

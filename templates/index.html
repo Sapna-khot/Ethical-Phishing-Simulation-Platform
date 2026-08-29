@@ -1,0 +1,490 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Phishing Simulator{% endblock %}
+
+{% block content %}
+
+<div class="cyber-dashboard">
+
+    <!-- ================= HERO ================= -->
+
+    <section class="cyber-hero">
+
+        <div class="hero-content">
+
+            <div class="security-label">
+                <span class="pulse-dot"></span>
+                SECURITY AWARENESS PLATFORM
+            </div>
+
+            <h1>
+                Phishing Simulation
+                <span>Control Center</span>
+            </h1>
+
+            <p>
+                Test, monitor and improve organizational security awareness
+                through controlled phishing simulations.
+            </p>
+
+            <div class="hero-warning">
+                <span>⚠</span>
+                <div>
+                    <strong>AUTHORIZED TRAINING ONLY</strong>
+                    <small>
+                        This platform is intended for controlled security
+                        awareness testing.
+                    </small>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+
+                <a href="/campaign/create"
+                   class="cyber-btn cyber-btn-primary">
+                    + Create Campaign
+                </a>
+
+                <a href="/template/create"
+                   class="cyber-btn cyber-btn-secondary">
+                    + Create Template
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- TERMINAL -->
+
+        <div class="hero-terminal">
+
+            <div class="terminal-header">
+
+                <span class="terminal-dot red"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+
+                <span class="terminal-title">
+                    security_monitor.sh
+                </span>
+
+            </div>
+
+            <div class="terminal-body">
+
+                <div>
+                    <span class="terminal-green">
+                        root@phishing-sim
+                    </span>:~$
+                    ./monitor
+                </div>
+
+                <br>
+
+                <div class="terminal-green">
+                    ✓ Campaign engine........ ONLINE
+                </div>
+
+                <div class="terminal-green">
+                    ✓ Tracking service....... ONLINE
+                </div>
+
+                <div class="terminal-green">
+                    ✓ Database............... ONLINE
+                </div>
+
+                <div class="terminal-green">
+                    ✓ Security monitoring.... ACTIVE
+                </div>
+
+                <br>
+
+                <div class="terminal-muted">
+                    [SYSTEM] Waiting for campaign activity...
+                </div>
+
+                <div class="terminal-muted">
+                    [SYSTEM] Monitoring authorized targets...
+                </div>
+
+                <br>
+
+                <div>
+                    <span class="terminal-green">
+                        STATUS: SECURE
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= STATISTICS ================= -->
+
+    <section class="cyber-stats">
+
+        <div class="cyber-stat">
+
+            <div class="stat-icon blue-icon">
+                ◈
+            </div>
+
+            <div>
+                <div class="stat-number">
+                    {{ stats.total_campaigns }}
+                </div>
+
+                <div class="stat-label">
+                    TOTAL CAMPAIGNS
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="cyber-stat">
+
+            <div class="stat-icon purple-icon">
+                ▣
+            </div>
+
+            <div>
+                <div class="stat-number">
+                    {{ stats.total_templates }}
+                </div>
+
+                <div class="stat-label">
+                    EMAIL TEMPLATES
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="cyber-stat">
+
+            <div class="stat-icon blue-icon">
+                ◎
+            </div>
+
+            <div>
+                <div class="stat-number">
+                    {{ stats.total_targets }}
+                </div>
+
+                <div class="stat-label">
+                    TOTAL TARGETS
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="cyber-stat">
+
+            <div class="stat-icon green-icon">
+                ✓
+            </div>
+
+            <div>
+                <div class="stat-number">
+                    {{ stats.active_campaigns }}
+                </div>
+
+                <div class="stat-label">
+                    ACTIVE CAMPAIGNS
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= RECENT CAMPAIGNS ================= -->
+
+    <section class="cyber-panel">
+
+        <div class="panel-header">
+
+            <div>
+
+                <div class="panel-title">
+                    <span class="panel-icon">◈</span>
+                    Recent Campaign Activity
+                </div>
+
+                <p>
+                    Latest phishing simulation campaigns
+                </p>
+
+            </div>
+
+            <a href="/campaigns"
+               class="view-all-btn">
+                VIEW ALL →
+            </a>
+
+        </div>
+
+
+        {% if campaigns %}
+
+        <div class="cyber-table-wrapper">
+
+            <table class="cyber-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>CAMPAIGN</th>
+                        <th>STATUS</th>
+                        <th>CREATED</th>
+                        <th>TARGETS</th>
+                        <th>ACTIONS</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for c in campaigns %}
+
+                    <tr>
+
+                        <td>
+
+                            <div class="campaign-name">
+
+                                <div class="campaign-icon">
+                                    ◈
+                                </div>
+
+                                <div>
+
+                                    <strong>
+                                        {{ c.name }}
+                                    </strong>
+
+                                    <span>
+                                        Campaign ID #{{ c.id }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="cyber-status">
+
+                                <span class="online-dot"></span>
+
+                                {{ c.status|upper }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="date-text">
+                                {{ c.created_at.strftime('%Y-%m-%d') }}
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="target-wrapper">
+
+                                <span class="target-icon">
+                                    ◎
+                                </span>
+
+                                <span class="target-count">
+                                    {{ c.targets|length }}
+                                </span>
+
+                                <span class="target-label">
+                                    TARGETS
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="campaign-actions">
+
+                                <!-- VIEW -->
+
+                                <a href="/campaign/{{ c.id }}"
+                                   class="action-btn action-view">
+                                    ◉ View
+                                </a>
+
+
+                                <!-- DELETE -->
+
+                                <form
+                                    action="{{ url_for('delete_campaign', campaign_id=c.id) }}"
+                                    method="POST"
+                                    class="delete-form"
+                                    onsubmit="return confirm('Are you sure you want to delete campaign {{ c.name }}? This cannot be undone.');"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="action-btn action-delete"
+                                    >
+                                        ✕ Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="table-footer">
+
+            <span>
+                <span class="online-dot"></span>
+                Campaign monitoring active
+            </span>
+
+            <span>
+                Showing latest {{ campaigns|length }} campaigns
+            </span>
+
+        </div>
+
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ◈
+            </div>
+
+            <h3>
+                No campaigns found
+            </h3>
+
+            <p>
+                Create your first security awareness campaign.
+            </p>
+
+            <a href="/campaign/create"
+               class="cyber-btn cyber-btn-primary">
+                + Create Campaign
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ================= SECURITY INFORMATION ================= -->
+
+    <section class="security-info-grid">
+
+        <div class="info-card">
+
+            <div class="info-icon blue-icon">
+                🛡
+            </div>
+
+            <div>
+
+                <h3>
+                    Controlled Simulation
+                </h3>
+
+                <p>
+                    Run authorized phishing simulations to measure
+                    employee security awareness.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon purple-icon">
+                ◉
+            </div>
+
+            <div>
+
+                <h3>
+                    Real-Time Monitoring
+                </h3>
+
+                <p>
+                    Track campaign activity and analyze user
+                    interaction with simulated messages.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <div class="info-icon green-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <h3>
+                    Security Education
+                </h3>
+
+                <p>
+                    Use simulation results to improve phishing
+                    awareness and defensive security practices.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+{% endblock %}

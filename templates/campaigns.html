@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Campaigns | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="page-hero">
+        <div>
+            <div class="security-label"><span class="pulse-dot"></span> CAMPAIGN MANAGEMENT</div>
+            <h1>Phishing <span>Campaigns</span></h1>
+            <p>Create, monitor and manage your security awareness simulations.</p>
+        </div>
+        <a href="{{ url_for('create_campaign') }}" class="cyber-btn cyber-btn-primary">＋ Create Campaign</a>
+    </section>
+
+    <section class="cyber-panel">
+        <div class="panel-header">
+            <div>
+                <div class="panel-kicker"><span class="panel-line"></span> SIMULATION DATABASE</div>
+                <h2>All Campaigns</h2>
+                <p>Manage your phishing simulation campaigns.</p>
+            </div>
+            <div class="campaign-total">
+                <span class="total-number">{{ campaigns|length }}</span>
+                <span class="total-label">Campaigns</span>
+            </div>
+        </div>
+
+        {% if campaigns %}
+        <div class="cyber-table-wrapper">
+            <table class="cyber-table campaign-table">
+                <thead>
+                    <tr><th>CAMPAIGN</th><th>STATUS</th><th>TARGETS</th><th>CREATED</th><th>ACTIONS</th></tr>
+                </thead>
+                <tbody>
+                {% for c in campaigns %}
+                    <tr>
+                        <td>
+                            <div class="campaign-name">
+                                <div class="campaign-icon">⚡</div>
+                                <div>
+                                    <strong>{{ c.name }}</strong>
+                                    <span>Phishing simulation · ID #{{ c.id }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="cyber-status status-{{ c.status }}">
+                                <span class="status-dot"></span>{{ c.status|upper }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="target-wrapper">
+                                <span class="target-icon">◎</span>
+                                <span class="target-count">{{ c.targets|length }}</span>
+                                <span class="target-label">targets</span>
+                            </div>
+                        </td>
+                        <td><span class="date-text">{{ c.created_at.strftime('%Y-%m-%d %H:%M') }}</span></td>
+                        <td>
+                            <div class="campaign-actions">
+                                <a href="{{ url_for('campaign_detail', campaign_id=c.id) }}" class="action-btn action-view">◉ View</a>
+                                <form action="{{ url_for('delete_campaign', campaign_id=c.id) }}" method="POST" class="delete-form"
+                                      onsubmit="return confirm('Are you sure you want to delete this campaign? This action cannot be undone.');">
+                                    <button type="submit" class="action-btn action-delete">✕ Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <span><span class="online-dot"></span> Campaign management system online</span>
+            <span>{{ campaigns|length }} campaign(s) detected</span>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">◈</div>
+            <h3>No Campaigns Found</h3>
+            <p>You haven't created any phishing simulation campaigns yet.</p>
+            <a href="{{ url_for('create_campaign') }}" class="cyber-btn cyber-btn-primary">＋ Create Your First Campaign</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

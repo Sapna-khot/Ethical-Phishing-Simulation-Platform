@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Error | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="cyber-panel error-panel">
+        <div class="error-icon">⚠</div>
+        <div class="security-label"><span class="pulse-dot"></span> SYSTEM MESSAGE</div>
+        <h1>Something went wrong</h1>
+        <p>{{ message or "An error occurred while processing your request." }}</p>
+        <a href="{{ url_for('index') }}" class="cyber-btn cyber-btn-primary">← Return to Dashboard</a>
+    </section>
+</div>
+{% endblock %}

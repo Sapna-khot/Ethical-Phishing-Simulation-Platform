@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Create Template | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="page-hero compact-page-hero">
+        <div>
+            <div class="security-label"><span class="pulse-dot"></span> TEMPLATE BUILDER</div>
+            <h1>Create <span>New Template</span></h1>
+            <p>Build a controlled email simulation template for authorized security awareness training.</p>
+        </div>
+        <a href="{{ url_for('templates') }}" class="cyber-btn cyber-btn-ghost">← Back to Templates</a>
+    </section>
+
+    <section class="cyber-panel form-panel">
+        <div class="panel-kicker"><span class="panel-line"></span> EMAIL SIMULATION CONFIGURATION</div>
+        <h2>Template Details</h2>
+
+        <div class="variable-bar">
+            <strong>Available variables</strong>
+            <code>{{tracking_url}}</code>
+            <code>{{target_email}}</code>
+            <code>{{target_name}}</code>
+            <code>{{token}}</code>
+            <span>Use these only where required by your controlled simulation.</span>
+        </div>
+
+        <form method="POST" class="cyber-form template-form">
+            <div class="form-field">
+                <label for="template-name">Template Name <span>*</span></label>
+                <input id="template-name" type="text" name="name" required placeholder="Password Reset Request">
+            </div>
+
+            <div class="form-grid-2">
+                <div class="form-field">
+                    <label for="category">Category <span>*</span></label>
+                    <select id="category" name="category" required>
+                        <option value="credential_harvesting">Credential Harvesting</option>
+                        <option value="urgent_action">Urgent Action Required</option>
+                        <option value="ceo_fraud">CEO Fraud / BEC</option>
+                        <option value="social_media">Social Media Scam</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="difficulty">Difficulty</label>
+                    <select id="difficulty" name="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="subject">Email Subject <span>*</span></label>
+                <input id="subject" type="text" name="subject" required placeholder="URGENT: Password Expires Today">
+            </div>
+
+            <div class="form-field">
+                <label for="body">Email Body (HTML) <span>*</span></label>
+                <textarea id="body" name="body" class="code-editor" required placeholder="Enter the controlled simulation email HTML here..."></textarea>
+                <small>Keep the message clearly within your authorized security-awareness exercise.</small>
+            </div>
+
+            <div class="form-field">
+                <label for="landing-page">Landing Page (HTML) <span>*</span></label>
+                <textarea id="landing-page" name="landing_page" class="code-editor" required placeholder="Enter the training landing-page HTML here..."></textarea>
+                <small>Use <code>{{token}}</code> in the form action when your simulation requires the tracking token.</small>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="cyber-btn cyber-btn-primary">✓ Create Template</button>
+                <a href="{{ url_for('templates') }}" class="cyber-btn cyber-btn-ghost">Cancel</a>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

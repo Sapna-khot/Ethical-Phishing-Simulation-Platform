@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Preview Template | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="page-hero compact-page-hero">
+        <div>
+            <div class="security-label"><span class="pulse-dot"></span> TEMPLATE PREVIEW</div>
+            <h1>Simulation <span>Preview</span></h1>
+            <p>Review how the controlled training email will appear to a recipient.</p>
+        </div>
+        <a href="{{ url_for('templates') }}" class="cyber-btn cyber-btn-ghost">← Back to Templates</a>
+    </section>
+
+    <section class="preview-layout">
+        <div class="cyber-panel preview-panel">
+            <div class="preview-toolbar">
+                <div><span class="window-dot red"></span><span class="window-dot yellow"></span><span class="window-dot green"></span></div>
+                <span>EMAIL PREVIEW · SECURE TRAINING ENVIRONMENT</span>
+            </div>
+
+            <div class="mail-window">
+                <div class="mail-header">
+                    <div class="mail-avatar">S</div>
+                    <div class="mail-sender">
+                        <strong>Security Awareness Team</strong>
+                        <span>security-training@example.com</span>
+                    </div>
+                    <span class="mail-time">Simulation Preview</span>
+                </div>
+                <div class="mail-subject">{{ template.subject }}</div>
+                <div class="mail-body">{{ preview_body|safe }}</div>
+            </div>
+        </div>
+
+        <aside class="cyber-panel preview-info">
+            <div class="panel-kicker"><span class="panel-line"></span> TEMPLATE DETAILS</div>
+            <h3>{{ template.name }}</h3>
+            <div class="detail-row"><span>Category</span><strong>{{ template.category.replace('_', ' ').title() }}</strong></div>
+            <div class="detail-row"><span>Difficulty</span><strong>{{ template.difficulty.title() }}</strong></div>
+            <div class="detail-row"><span>Used in campaigns</span><strong>{{ template.campaigns|length }}</strong></div>
+            <a href="{{ url_for('create_campaign') }}?template_id={{ template.id }}" class="cyber-btn cyber-btn-primary full-btn">Use This Template</a>
+        </aside>
+    </section>
+</div>
+{% endblock %}

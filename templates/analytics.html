@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Analytics | Phishing Simulator{% endblock %}
+{% block content %}
+<div class="cyber-dashboard page-ui">
+    <section class="page-hero">
+        <div>
+            <div class="security-label"><span class="pulse-dot"></span> SECURITY ANALYTICS</div>
+            <h1>Campaign <span>Analytics</span></h1>
+            <p>Monitor simulation performance and identify security-awareness training opportunities.</p>
+        </div>
+    </section>
+
+    <section class="cyber-stats analytics-stats">
+        <div class="cyber-stat"><div class="stat-icon blue-icon">◈</div><div><div class="stat-number">{{ stats.total_campaigns }}</div><div class="stat-label">CAMPAIGNS</div></div></div>
+        <div class="cyber-stat"><div class="stat-icon purple-icon">◎</div><div><div class="stat-number">{{ stats.total_targets }}</div><div class="stat-label">TARGETS</div></div></div>
+        <div class="cyber-stat"><div class="stat-icon blue-icon">↗</div><div><div class="stat-number">{{ stats.total_clicked }}</div><div class="stat-label">CLICKED</div></div></div>
+        <div class="cyber-stat"><div class="stat-icon green-icon">✓</div><div><div class="stat-number">{{ stats.total_submitted }}</div><div class="stat-label">SUBMITTED</div></div></div>
+    </section>
+
+    <section class="cyber-panel performance-panel">
+        <div class="panel-header">
+            <div><div class="panel-kicker"><span class="panel-line"></span> OVERALL PERFORMANCE</div><h2>Security Awareness Indicators</h2><p>Rates are calculated from tracked messages.</p></div>
+        </div>
+        <div class="rate-grid">
+            <div class="rate-card"><div class="rate-head"><span>Open Rate</span><strong>{{ stats.get('overall_open_rate', 0) }}%</strong></div><div class="rate-track"><span style="width: {{ stats.get('overall_open_rate', 0) }}%"></span></div></div>
+            <div class="rate-card"><div class="rate-head"><span>Click Rate</span><strong>{{ stats.get('overall_click_rate', 0) }}%</strong></div><div class="rate-track"><span style="width: {{ stats.get('overall_click_rate', 0) }}%"></span></div></div>
+            <div class="rate-card"><div class="rate-head"><span>Submit Rate</span><strong>{{ stats.get('overall_submit_rate', 0) }}%</strong></div><div class="rate-track"><span style="width: {{ stats.get('overall_submit_rate', 0) }}%"></span></div></div>
+        </div>
+    </section>
+
+    <section class="cyber-panel">
+        <div class="panel-header"><div><div class="panel-kicker"><span class="panel-line"></span> CAMPAIGN PERFORMANCE</div><h2>Campaign Activity</h2><p>Compare interaction metrics across active and completed simulations.</p></div></div>
+        {% if campaigns %}
+        <div class="cyber-table-wrapper">
+            <table class="cyber-table analytics-table">
+                <thead><tr><th>CAMPAIGN</th><th>TARGETS</th><th>SENT</th><th>OPENED</th><th>CLICKED</th><th>SUBMITTED</th></tr></thead>
+                <tbody>
+                {% for c in campaigns %}
+                    {% set sent = c.targets|selectattr('sent_at')|list|length %}
+                    {% set opened = c.targets|selectattr('opened_at')|list|length %}
+                    {% set clicked = c.targets|selectattr('clicked_at')|list|length %}
+                    {% set submitted = c.targets|selectattr('submitted_at')|list|length %}
+                    <tr>
+                        <td><strong>{{ c.name }}</strong><span class="table-subtext">{{ c.status|upper }}</span></td>
+                        <td>{{ c.targets|length }}</td><td>{{ sent }}</td><td>{{ opened }}</td><td>{{ clicked }}</td><td>{{ submitted }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state compact-empty"><div class="empty-icon">⌁</div><h3>No Campaign Data Yet</h3><p>Launch a controlled campaign to start collecting analytics.</p></div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
